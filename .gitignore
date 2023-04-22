@@ -1,5 +1,39 @@
 # Prerequisites
 *.d
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/.gitignore
+*.vcxproj
+*.filters
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/projectSettingsUpdater.xml
+/.idea.DotrMod.iml
+/contentModel.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# CMake
+cmake-build-*/
+# AWS User-specific
+.idea/**/aws.xml
+
+*Debug/
+*DotrMod/Debug
+*DotrMod/x64
+*.pdb
+*.xml
+# Generated files
+.idea/**/contentModel.xml
 
 # Compiled Object files
 *.slo
