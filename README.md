@@ -10,8 +10,8 @@ but if you want to use it here are the instructions.
 To use this you would need an Injector of your choice,
 
 Steps to use:
-Open pcsx2
-Inject the dll
-Load Duelist of the Roses
-Wait for the Konami screen then press the home key to load the changes
-Play the game
+Open pcsx2\n
+Inject the dll\n
+Load Duelist of the Roses\n
+Wait for the Konami screen then press the home key to load the changes\n
+Play the game\n
