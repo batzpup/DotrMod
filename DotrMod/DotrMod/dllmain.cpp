@@ -103,16 +103,12 @@ void WhiteRoseGoesFirst()
 {
     printf("White Rose First \n");
     //Moves the first 7 instructions up 2 bytes to fill spares nops
-    //Then the next two instructions(8th and 9th): first one loads 1 into s6,
+    //Then the next two instructions(8th and 9th): first one loads 1 into s6, (change 0X,00,16,24 to change which team starts first)
     //Second one stores the value of s6 into s0 + 0xf92 which is TurnFirst variable
-    /*mem::Patch((BYTE*)MakeWhiteStart,
-                 (BYTE*)
-                 "\x10\x28\x00\x00\x40\x79\x07\x0c\x01\x00\x04\x24\x3c\x01\x04\x8e\x40\x01\x05\x8e\x40\xb7\x06\x0c\x28\x36\x40\x72\x01\x00\x16\x24\x92\x0f\x16\xa2",
-                 36); */
     mem::Patch((BYTE*)MakeWhiteStart,
                  (BYTE*)
-                 "\x10\x28\x00\x00\x40\x79\x07\x0c\x01\x00\x04\x24\x3c\x01\x04\x8e\x40\x01\x05\x8e\x40\xb7\x06\x0c\x28\x36\x40\x72\x01\x00\x16\x24\x92\x0f\x16\xa2\x20\x00\x00\x00",
-                 40);
+                 "\x10\x28\x00\x00\x40\x79\x07\x0c\x01\x00\x04\x24\x3c\x01\x04\x8e\x40\x01\x05\x8e\x40\xb7\x06\x0c\x28\x36\x40\x72\x01\x00\x16\x24\x92\x0f\x16\xa2",
+                 36); 
 }
 
 void AllowNonMonsterFusions()
