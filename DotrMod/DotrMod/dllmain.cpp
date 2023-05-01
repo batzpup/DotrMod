@@ -44,7 +44,7 @@ uintptr_t negExpDelUnit2_2 = 0x2024f4e4;
 uintptr_t MoveRaresPtr = 0x20251510;
 
 //In Progress
-
+uintptr_t MoreDigitsOnScreen = 0x201b1bd0;
 
 //Probably wont use but good to know
 
@@ -183,6 +183,66 @@ void MoveRares()
                "\x17\x02\x02\x24\x06\x00\x62\x10\x00\x00\x00\x00\x47\x45\x09\x08\x00\x00\x00\x00\x2b\x03\x02\x24\xab\x45\x09\x08\x00\x00\x00\x00\x1a\x02\x02\x24\xab\x45\x09\x08\x00\x00\x00\x00",
                44);
 }
+void ChangeStatCap()
+{
+    //Todo fix this as it doesnt work
+
+    printf("Changed Stat Cap to 20k\n");
+    //Changes the if check from 9999 to 20k
+    mem::Patch((BYTE*)0x202508d4, (BYTE*)"\x21\x4e\x81\x28", 4);
+    mem::Patch((BYTE*)0x202508e0, (BYTE*)"\x21\x4e\x81\x28", 4);
+
+
+    //changes the assignment to 20k
+    mem::Patch((BYTE*)0x202508ec, (BYTE*)"\x20\x4e\x04\x24", 4);
+    
+}
+
+void Allow5DigitsOnUI()
+{
+    printf("Allows 5 digits on UI \n");
+
+    ChangeStatCap();
+    //Allow 5 digits on UI
+    mem::Patch((BYTE*)MoreDigitsOnScreen, (BYTE*)"\x05\x00\x07\x24", 4);
+    
+    //Move player details box y pos
+    mem::Patch((BYTE*)0x201b13b4, (BYTE*)"\x14\x00\x04\x24", 4);
+
+    //Move Player name tag
+    mem::Patch((BYTE*)0x201b1be4, (BYTE*)"\x94\x00\x03\x24 ", 4);
+      	   
+
+
+    //Move allignment
+    //mem::Patch((BYTE*)0x201b1c64, (BYTE*)"\x1c\x00\xf0\x26", 4);
+    
+
+
+    //offset white rose x pos left
+    mem::Patch((BYTE*)0x201b13f8, (BYTE*)"\x90\x01\x06\x24 ", 4);
+
+    //Move Player Picture Right
+    //mem::Patch((BYTE*)0x201b1b34, (BYTE*)"\x18\x00\xa3\x26", 4);
+    mem::Patch((BYTE*)0x201b1b2c, (BYTE*)"\x94\x00\x02\x24", 4);
+
+
+    
+    // make LP background box wider
+    mem::Patch((BYTE*)0x201b1b9c, (BYTE*)"\x0e\x00\x08\x24", 4);
+
+
+
+    //Make UI Wider
+    mem::Patch((BYTE*)0x201b1afc, (BYTE*)"\x2a\x00\x0a\x24", 4);
+    //Make UI Taller
+    //mem::Patch((BYTE*)0x201b1b00, (BYTE*)"\x10\x00\x0b\x24", 4);
+    	  
+    
+    
+}
+
+
 
 
 DWORD WINAPI HackThread(HMODULE hModule)
@@ -217,6 +277,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
             RemoveSlotsRng();
             //ChangeMakosTheme();
             NerfTerrainTo300();
+            Allow5DigitsOnUI();
         }
         Sleep(1);
     }
