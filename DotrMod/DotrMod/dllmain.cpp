@@ -188,13 +188,22 @@ void ChangeStatCap()
     //Todo fix this as it doesnt work
 
     printf("Changed Stat Cap to 20k\n");
+
+    //Changes stat cap function
+
+    printf("Changed Stat Cap Func\n");
     //Changes the if check from 9999 to 20k
     mem::Patch((BYTE*)0x202508d4, (BYTE*)"\x21\x4e\x81\x28", 4);
     mem::Patch((BYTE*)0x202508e0, (BYTE*)"\x21\x4e\x81\x28", 4);
-
-
     //changes the assignment to 20k
     mem::Patch((BYTE*)0x202508ec, (BYTE*)"\x20\x4e\x04\x24", 4);
+    
+    //Changes SzDuel_CalcLP function
+    printf("Changed Calc LP Func\n");
+    //Changes the if check from 9999 to 20k
+    mem::Patch((BYTE*)0x201df51c, (BYTE*)"\x21\x4e\x41\x28", 4);
+    //changes the assignment to 20k
+    mem::Patch((BYTE*)0x201df524, (BYTE*)"\x21\x4e\x41\x28", 4);
     
 }
 
