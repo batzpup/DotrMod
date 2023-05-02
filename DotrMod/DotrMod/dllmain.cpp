@@ -185,8 +185,6 @@ void MoveRares()
 }
 void ChangeStatCap()
 {
-    //Todo fix this as it doesnt work
-
     printf("Changed Stat Cap to 20k\n");
 
     //Changes stat cap function
