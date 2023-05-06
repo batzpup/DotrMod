@@ -221,7 +221,7 @@ void Allow5DigitsOnUI()
       	   
 
 
-    //Move allignment
+    //Move allignment (no needed anymore but could be useful in future)
     //mem::Patch((BYTE*)0x201b1c64, (BYTE*)"\x1c\x00\xf0\x26", 4);
     
 
@@ -249,10 +249,15 @@ void Allow5DigitsOnUI()
     
 }
 
+void AIPassInsteadOfPressX()
+{
+    printf("Make AI Pass instead of x on no move units?\n");
+   mem::ShiftBytesMips((byte*)0x20276400,(byte*)0x2027640c,468);
+    
+}
 
 
-
-DWORD WINAPI HackThread(HMODULE hModule)
+DWORD WINAPI ModThread(HMODULE hModule)
 {
     //Create console
     AllocConsole();
@@ -285,6 +290,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
             //ChangeMakosTheme();
             NerfTerrainTo300();
             Allow5DigitsOnUI();
+            AIPassInsteadOfPressX();
         }
         Sleep(1);
     }
@@ -310,7 +316,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
         {
-            HANDLE handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)HackThread, hModule, 0, 0);
+            HANDLE handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)ModThread, hModule, 0, 0);
             if (handle)
             {
                 CloseHandle(handle);

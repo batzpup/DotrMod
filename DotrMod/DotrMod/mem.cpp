@@ -109,7 +109,7 @@ void mem::ShiftBytesMips(BYTE* srcAddress, BYTE* dstAddress, unsigned int size)
 {
 	DWORD oldProtectionRightSrc;
 	DWORD oldProtectionRightDst;
-	int distance = *(int*)dstAddress - *(int*)srcAddress;
+	int distance = (int)(int*)dstAddress - (int)(int*)srcAddress;
 	VirtualProtect(srcAddress, size, PAGE_EXECUTE_READWRITE, &oldProtectionRightSrc);
 	VirtualProtect(dstAddress, size, PAGE_EXECUTE_READWRITE, &oldProtectionRightDst);
 	memcpy(dstAddress, srcAddress, size);
@@ -117,7 +117,7 @@ void mem::ShiftBytesMips(BYTE* srcAddress, BYTE* dstAddress, unsigned int size)
 	{
 		NopMips(srcAddress, distance / 4);
 	}
-	if (distance < 0 && size > abs(distance))
+	else if (distance < 0 && size > abs(distance))
 	{
 		int difference = size - abs(distance);
 		NopMips(srcAddress + difference, distance / 4);
