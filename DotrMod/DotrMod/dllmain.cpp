@@ -36,15 +36,23 @@ uintptr_t ChangeBgmAddressTable1 = 0x202be6d0;
 uintptr_t ChangeBgmAddressTable2 = 0x202be710;
 
 //Remove negetive exp
+//TODO Deckleader still loses exp on loss
 uintptr_t negExpAtkLeader = 0x20274558;
 uintptr_t negExpDelUnit = 0x2024f38c;
 uintptr_t negExpDelUnit2 = 0x2024f404;
 uintptr_t negExpDelUnit2_1 = 0x2024f460;
 uintptr_t negExpDelUnit2_2 = 0x2024f4e4;
+
+
+//Make space for more specific 3 in a row rares
 uintptr_t MoveRaresPtr = 0x20251510;
 
-//In Progress
+//Allow 5 digits for LP
 uintptr_t MoreDigitsOnScreen = 0x201b1bd0;
+
+// Remove going to each unit when they arent going to be moved
+uintptr_t improveAIInputOrig = 0x2027646c;
+uintptr_t improveAIInputDest = 0x20360100;
 
 //Probably wont use but good to know
 
@@ -54,8 +62,10 @@ uintptr_t ExpandSelectionRange2 = 0x201d2cdc;
 //mem::Patch((BYTE*)ExpandSelectionRange2, (BYTE*)"\x0a\x00\x42\x28", 4);
 
 
+
 void PatchNegetiveExpPatch()
 {
+    //TODO FIX
     printf("Removed loss of Exp\n");
     mem::Patch((BYTE*)negExpAtkLeader, (BYTE*)"\x00\xff\x07\x24", 4);
     mem::Patch((BYTE*)negExpDelUnit, (BYTE*)"\x00\xff\x07\x24", 4);
@@ -221,7 +231,7 @@ void Allow5DigitsOnUI()
       	   
 
 
-    //Move allignment (no needed anymore but could be useful in future)
+    //Move allignment (not needed anymore but could be useful in future)
     //mem::Patch((BYTE*)0x201b1c64, (BYTE*)"\x1c\x00\xf0\x26", 4);
     
 
@@ -249,12 +259,50 @@ void Allow5DigitsOnUI()
     
 }
 
-void AIPassInsteadOfPressX()
+void AIPassInsteadOfPressXDeprecated()
 {
     printf("Make AI Pass instead of x on no move units?\n");
-   mem::ShiftBytesMips((byte*)0x20276400,(byte*)0x2027640c,468);
+    //moving bytes to the bottom to free up 3 free instrutions
+    //mem::ShiftBytesMips((byte*)0x20276400,(byte*)0x2027640c,468);
+
+
+    //Replace original code with jump to 0x20360100
+    mem::Patch((BYTE*)improveAIInputOrig, (BYTE*)"\x40\x80\x0d\x08\x00\x00\x00\x00", 8);
+
+    //One mega patch adds
+    /*           if ((((task->shouldFlipUp == 2) && (colDist == 0)) && (rowDist == 0)) &&
+         (task->atkDefPosition == 2)) {
+        unit = SzDuel_GetUnit((int)(uint)task->unitOwnerId >> 8,task->unitOwnerId & 0xff);
+        *(byte *)(int)unit->status = unit->status & 0xfeU | 1;
+        rowDiff = 0;
+        do {
+          *(undefined2 *)((int)data->inputQue + rowDiff) = 0xffff;
+          rowDiff = rowDiff + 2;
+        } while (rowDiff < 0x40);
+        goto LAB_00276b04;
+      }
+         */
+    mem::Patch((BYTE*)improveAIInputDest, (BYTE*)"\x0c\x00\x03\x8e\x02\x00\x02\x24\x23\x00\x62\x14\x00\x00\x00\x00\x21\x00\xc0\x16\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x00\xe0\x16\x00\x00\x00\x00\x10\x00\x02\x92\x02\x00\x03\x24\x1a\x00\x43\x14\x00\x00\x00\x00\x00\x00\x02\x96\x03\x22\x02\x00\x50\x7d\x07\x0c\xff\x00\x45\x30\x57\x00\x45\x80\xfe\x00\x07\x24\x24\x28\xe5\x00\x01\x00\xa5\x34\x57\x00\x45\xa0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x24\xff\xff\x01\x34\x60\x01\x22\x26\x20\x10\x5e\x00\x00\x00\x41\xa4\x02\x00\xde\x27\x40\x00\xc2\x2b\x00\x00\x00\x00\xf9\xff\x40\x14\x00\x00\x00\x00\xc1\xda\x09\x08\x00\x00\x00\x00\x0c\x00\x03\x8e\x01\x00\x02\x24\x1d\xd9\x09\x08\x00\x00\x00\x00", 168);
+    
+
+    //Stop input removal?
+    //mem::NopMips((BYTE*)0x20360168,9);
     
 }
+
+
+void AIPassInsteadOfPressX()
+{
+    //Patch Jump to 0036009c
+    mem::Patch((BYTE*)0x20276300, (BYTE*)"\x27\x80\x0d\x08\x00\x00\x00\x00", 8);
+    //Patch logic at jmp location
+    //Broken
+    mem::Patch((BYTE*)0x2036009c, (BYTE*)"\x02\x00\x03\x92\x06\x00\x0b\x24\x21\x00\x6b\x14\x00\x00\x00\x00\xff\x00\x4c\x30\x04\x00\x0d\x96\xff\x00\xb8\x31\x23\x70\x98\x01\x1b\x00\xc0\x15\x00\x00\x00\x00\x03\x62\x02\x00\x03\xc2\x0d\x00\x22\x70\x98\x01\x16\x00\xc0\x15\x00\x00\x00\x00\x00\x00\x09\x92\x00\x00\x00\x00\x00\x00\x00\x00\x0c\x00\x0d\x8e\x02\x00\x09\x24\x0f\x00\xa9\x15\x00\x00\x00\x00\x10\x00\x0d\x92\x0c\x00\xa9\x15\x00\x00\x00\x00\x50\x7d\x07\x0c\x00\x00\x00\x00\x57\x00\x4d\x80\x00\x00\x00\x00\x01\x00\xad\x35\x57\x00\x4d\xa0\x60\x01\x28\x26\x20\x00\x09\x24\x00\x00\x09\xa5\xc1\xda\x09\x08\x00\x00\x00\x00\xff\xff\x8a\x32\xff\x00\x83\x32\xc2\xd8\x09\x08", 156);
+    
+    
+    
+}
+
 
 
 DWORD WINAPI ModThread(HMODULE hModule)

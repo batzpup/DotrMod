@@ -17,6 +17,7 @@ namespace mem
 	void MoveBytes(BYTE* srcAddress, BYTE* dstAddress, unsigned int size);
 	void MoveBytesMips(BYTE* srcAddress, BYTE* dstAddress, unsigned int size);
 	void ShiftBytesMips(BYTE* srcAddress, BYTE* dstAddress, unsigned int size);
+	void ShiftBytesMips(BYTE* srcAddress,int numberOfInstructions);
 	void CopyBytes(BYTE* srcAddress, BYTE* dstAddress, unsigned int size);
 	void Patch(BYTE* dstAddr, BYTE* srcAddr, unsigned int size);
 	void PatchVal(BYTE* dstAddr, int val, unsigned int size);

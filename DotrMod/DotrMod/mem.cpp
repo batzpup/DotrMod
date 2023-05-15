@@ -130,6 +130,33 @@ void mem::ShiftBytesMips(BYTE* srcAddress, BYTE* dstAddress, unsigned int size)
 	VirtualProtect(dstAddress, size, oldProtectionRightDst, &oldProtectionRightDst);
 
 }
+void mem::ShiftBytesMips(BYTE* srcAddress, int numberOfInstructions)
+{
+	DWORD oldProtectionRightSrc;
+	DWORD oldProtectionRightDst;
+	const int size = numberOfInstructions *4;
+	byte* dstAddress = srcAddress + size;
+	VirtualProtect(srcAddress, size, PAGE_EXECUTE_READWRITE, &oldProtectionRightSrc);
+	VirtualProtect(dstAddress, size, PAGE_EXECUTE_READWRITE, &oldProtectionRightDst);
+	memcpy(dstAddress, srcAddress, size);
+	if (size > 0)
+	{
+		NopMips(srcAddress, size / 4);
+	}
+	else if (size < 0 && size > abs(size))
+	{
+		int difference = size - abs(size);
+		NopMips(srcAddress + difference, size / 4);
+	}
+	else
+	{
+		NopMips(srcAddress, size / 4);
+	}	
+	VirtualProtect(srcAddress, size, oldProtectionRightSrc, &oldProtectionRightSrc);
+	VirtualProtect(dstAddress, size, oldProtectionRightDst, &oldProtectionRightDst);
+}
+
+
 void mem::CopyBytes(BYTE* srcAddress, BYTE* dstAddress, unsigned int size)
 {
 	DWORD oldProtectionRightDst;
